@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#08050f">
+<meta name="description" content="Rotina no Controle — método digital de organização da rotina com um app completo.">
+<title>Rotina no Controle — Organize sua rotina</title>
+
+<style>
+:root{
+  --bg:#07050c;
+  --bg-soft:#0d0916;
+  --panel:#120c1e;
+  --panel-2:#191024;
+  --panel-3:#21132f;
+  --line:rgba(255,255,255,.09);
+  --line-purple:rgba(175,91,255,.30);
+  --text:#fbf9ff;
+  --muted:#b8afc7;
+  --muted-2:#817794;
+  --purple:#9d56ff;
+  --purple-2:#c17cff;
+  --purple-3:#e0bbff;
+  --violet:#6f36d7;
+  --success:#8cf3d0;
+  --max:1160px;
+  --radius:28px;
+  --shadow:0 30px 100px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--text);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 10% 5%,rgba(151,76,255,.19),transparent 26%),
+    radial-gradient(circle at 90% 16%,rgba(106,45,211,.17),transparent 25%),
+    radial-gradient(circle at 52% 72%,rgba(180,66,255,.10),transparent 30%),
+    linear-gradient(180deg,#06040a 0%,#090611 42%,#07050d 100%);
+  overflow-x:hidden;
+}
+body:before{
+  content:"";
+  position:fixed;
+  inset:-30%;
+  background:
+    repeating-linear-gradient(120deg,transparent 0 18px,rgba(159,85,255,.022) 19px 20px);
+  opacity:.35;
+  pointer-events:none;
+  z-index:-2;
+}
+a{color:inherit}
+button{font:inherit}
+.container{width:min(var(--max),calc(100% - 40px));margin:0 auto}
+section{padding:105px 0}
+.center{text-align:center}
+.kicker{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:8px 13px;border-radius:999px;
+  background:rgba(157,86,255,.10);
+  border:1px solid rgba(193,124,255,.20);
+  color:var(--purple-3);
+  font-size:11px;font-weight:900;
+  letter-spacing:.14em;text-transform:uppercase;
+}
+.kicker-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--purple-2);
+  box-shadow:0 0 20px var(--purple-2);
+}
+h1,h2,h3,p{margin:0}
+h1{
+  margin-top:19px;
+  font-size:clamp(48px,6.5vw,82px);
+  line-height:.99;letter-spacing:-.055em;
+  max-width:900px;
+}
+h1 .shine,h2 .shine{
+  background:linear-gradient(120deg,#fff 8%,#dcc2ff 50%,#a96cff 90%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+h2{
+  font-size:clamp(34px,4.6vw,58px);
+  line-height:1.02;letter-spacing:-.045em;
+}
+h3{
+  font-size:22px;line-height:1.12;letter-spacing:-.025em;
+}
+.lead{
+  max-width:760px;margin:20px auto 0;
+  color:var(--muted);font-size:20px;line-height:1.65;
+}
+.muted{color:var(--muted)}
+.tiny{font-size:13px;color:var(--muted-2)}
+.topbar{
+  padding:22px 0 5px;
+}
+.brand{
+  font-size:19px;font-weight:950;letter-spacing:.05em;
+}
+.brand span{color:var(--purple-2)}
+.hero{padding-top:45px;min-height:900px;display:flex;align-items:center}
+.hero-grid{
+  display:grid;grid-template-columns:1.02fr .98fr;
+  gap:54px;align-items:center;
+}
+.hero-copy .lead{margin-left:0;text-align:left;max-width:650px}
+.hero-copy .kicker{margin-bottom:2px}
+.hero-actions{
+  display:flex;gap:13px;flex-wrap:wrap;
+  margin-top:30px;
+}
+.btn{
+  min-height:58px;padding:15px 21px;border-radius:17px;
+  display:inline-flex;align-items:center;justify-content:center;
+  text-decoration:none;font-size:15px;font-weight:950;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+  border:1px solid transparent;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{
+  color:white;
+  background:linear-gradient(135deg,#b66eff,#7b40dc);
+  box-shadow:0 18px 44px rgba(150,77,255,.28);
+}
+.btn-secondary{
+  background:rgba(255,255,255,.035);
+  border-color:var(--line);
+  color:var(--text);
+}
+.hero-note{
+  display:flex;gap:12px;align-items:center;
+  margin-top:20px;color:var(--muted-2);font-size:12px
+}
+.hero-note b{color:#d6c8e5}
+
+.phone-wrap{position:relative;display:flex;justify-content:center}
+.glow{
+  position:absolute;inset:10% 6%;
+  background:radial-gradient(circle,rgba(158,79,255,.35),transparent 62%);
+  filter:blur(36px);
+}
+.phone{
+  position:relative;
+  width:min(395px,92vw);
+  background:#08070d;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:42px;
+  padding:12px;
+  box-shadow:0 40px 110px rgba(0,0,0,.58),0 0 70px rgba(132,59,221,.12);
+}
+.phone:before{
+  content:"";position:absolute;top:10px;left:50%;transform:translateX(-50%);
+  width:120px;height:25px;border-radius:20px;background:#030207;
+  box-shadow:0 0 0 1px rgba(255,255,255,.05);
+}
+.phone-screen{
+  min-height:690px;border-radius:32px;overflow:hidden;
+  background:
+    radial-gradient(circle at 80% 0%,rgba(153,78,255,.15),transparent 28%),
+    linear-gradient(180deg,#0b0912,#0a0810);
+  padding:43px 16px 18px;
+}
+.app-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.app-title{font-size:14px;font-weight:900}
+.app-sub{font-size:9px;color:#746a80;margin-top:3px}
+.app-pill{
+  width:32px;height:32px;border-radius:10px;
+  display:grid;place-items:center;
+  background:rgba(166,99,255,.12);border:1px solid rgba(255,255,255,.06);
+  color:var(--purple-2);font-size:13px;
+}
+.app-card{
+  border:1px solid rgba(255,255,255,.07);
+  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+  border-radius:21px;padding:15px;margin-top:13px;
+}
+.app-card strong{display:block;font-size:13px}
+.app-card span{font-size:10px;color:#8d8299}
+.app-highlight{
+  margin-top:14px;border-radius:20px;padding:17px;
+  background:linear-gradient(145deg,rgba(137,68,215,.50),rgba(55,27,82,.62));
+  border:1px solid rgba(202,157,255,.18);
+}
+.app-highlight .big{font-size:26px;font-weight:950;line-height:1}
+.app-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+.app-mini{
+  padding:13px;border-radius:17px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.06);
+}
+.app-mini b{display:block;font-size:11px}
+.app-mini small{font-size:9px;color:#82768e}
+.app-bottom{
+  display:grid;grid-template-columns:repeat(6,1fr);
+  gap:4px;margin-top:18px;
+  padding:8px 4px 4px;
+  border-top:1px solid rgba(255,255,255,.06)
+}
+.app-bottom span{font-size:8px;text-align:center;color:#6e6478}
+.app-bottom span.active{color:#b276ff}
+
+.section-head{max-width:800px}
+.section-head.center{margin:0 auto}
+.feature-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+  margin-top:34px;
+}
+.feature{
+  padding:25px;border-radius:23px;
+  background:linear-gradient(145deg,rgba(27,17,40,.96),rgba(13,9,20,.96));
+  border:1px solid var(--line);
+  box-shadow:0 18px 50px rgba(0,0,0,.18);
+}
+.feature-icon{
+  width:49px;height:49px;border-radius:15px;
+  display:grid;place-items:center;
+  color:#e4c6ff;font-size:20px;
+  background:rgba(156,84,255,.13);
+  border:1px solid rgba(195,130,255,.16);
+}
+.feature h3{margin-top:18px}
+.feature p{margin-top:9px;font-size:14px;line-height:1.6;color:var(--muted)}
+.feature .tag{
+  display:inline-block;margin-top:17px;
+  color:#caa9ff;font-size:10px;font-weight:900;
+  letter-spacing:.1em;text-transform:uppercase
+}
+
+.story{
+  display:grid;grid-template-columns:.9fr 1.1fr;gap:28px;align-items:stretch;
+}
+.story-box{
+  border-radius:28px;border:1px solid var(--line);
+  background:
+    linear-gradient(145deg,rgba(102,47,142,.28),rgba(17,10,26,.72)),
+    radial-gradient(circle at 10% 0%,rgba(213,131,255,.11),transparent 30%);
+  padding:33px;
+}
+.story-box .bigquote{
+  font-size:clamp(28px,3.2vw,43px);
+  line-height:1.12;font-weight:900;letter-spacing:-.035em
+}
+.story-box p{margin-top:17px;font-size:15px;line-height:1.75;color:var(--muted)}
+.story-stack{display:grid;gap:15px}
+.info-line{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:21px;border-radius:22px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.025)
+}
+.info-number{
+  flex:none;width:42px;height:42px;border-radius:13px;
+  display:grid;place-items:center;
+  background:rgba(151,80,255,.14);color:var(--purple-2);
+  font-weight:950
+}
+.info-line b{font-size:15px}
+.info-line p{margin-top:4px;font-size:13px;color:var(--muted);line-height:1.55}
+
+.app-feature-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:15px;
+  margin-top:34px;
+}
+.app-feature{
+  padding:23px;border-radius:23px;
+  border:1px solid var(--line-purple);
+  background:linear-gradient(145deg,rgba(32,19,48,.98),rgba(15,9,24,.98));
+}
+.app-feature-top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.app-feature-icon{
+  width:45px;height:45px;border-radius:14px;display:grid;place-items:center;
+  background:rgba(173,91,255,.11);color:#d4b0ff
+}
+.app-feature .badge{
+  font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;
+  color:#bfa5d2;background:rgba(255,255,255,.04);
+  padding:7px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.06)
+}
+.app-feature h3{margin-top:17px}
+.app-feature p{margin-top:8px;color:var(--muted);font-size:13px;line-height:1.65}
+
+.offer{
+  position:relative;overflow:hidden;
+  padding:52px 35px;text-align:center;
+  border-radius:34px;
+  border:1px solid rgba(191,126,255,.28);
+  background:
+    radial-gradient(circle at 50% 0%,rgba(170,88,255,.22),transparent 38%),
+    linear-gradient(145deg,rgba(31,18,46,.96),rgba(12,8,19,.98));
+  box-shadow:var(--shadow);
+}
+.offer:after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(120deg,transparent 0 30%,rgba(255,255,255,.035) 45%,transparent 60%);
+  pointer-events:none
+}
+.offer h2{max-width:760px;margin:15px auto 0}
+.offer p{max-width:690px;margin:16px auto 0;color:var(--muted);font-size:17px}
+.price{
+  margin-top:25px;font-size:70px;font-weight:1000;letter-spacing:-.055em;line-height:1
+}
+.price small{font-size:20px;color:#a69aaf;font-weight:800;letter-spacing:0}
+.offer-list{
+  display:flex;justify-content:center;flex-wrap:wrap;
+  gap:10px;margin:23px auto 0
+}
+.offer-list span{
+  padding:9px 12px;border-radius:999px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  color:#d4c9dd;font-size:12px;font-weight:800
+}
+.offer .btn{margin-top:28px;min-width:310px}
+.guarantee{
+  margin-top:14px;font-size:12px;color:#9c91aa
+}
+.guarantee b{color:#c4aeff}
+
+.faq{
+  max-width:850px;margin:32px auto 0;
+  display:grid;gap:10px
+}
+.faq-item{
+  border:1px solid var(--line);
+  border-radius:19px;background:rgba(255,255,255,.025);
+  overflow:hidden
+}
+.faq-q{
+  width:100%;padding:19px 21px;border:0;background:transparent;color:var(--text);
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  text-align:left;font-size:15px;font-weight:900;cursor:pointer
+}
+.faq-q span:last-child{color:var(--purple-2);font-size:21px}
+.faq-a{
+  max-height:0;overflow:hidden;transition:max-height .3s ease;
+}
+.faq-a p{padding:0 21px 20px;color:var(--muted);font-size:13px;line-height:1.7}
+.faq-item.open .faq-a{max-height:180px}
+
+footer{padding:28px 0 55px;color:#6e6577;text-align:center;font-size:12px}
+
+@media(max-width:900px){
+  section{padding:80px 0}
+  .hero{min-height:auto}
+  .hero-grid,.story{grid-template-columns:1fr}
+  .hero-copy{text-align:center}
+  .hero-copy .lead{margin-left:auto;text-align:center}
+  .hero-actions{justify-content:center}
+  .hero-note{justify-content:center}
+  .feature-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(max-width:650px){
+  :root{--max:680px}
+  .container{width:calc(100% - 22px)}
+  section{padding:62px 0}
+  .topbar{padding-top:17px}
+  .brand{font-size:18px}
+  h1{font-size:clamp(43px,12.5vw,60px);line-height:1.01}
+  h2{font-size:clamp(34px,10vw,46px)}
+  .lead{font-size:18px;line-height:1.62}
+  .hero{padding-top:27px}
+  .hero-grid{gap:30px}
+  .hero-actions{display:grid;grid-template-columns:1fr;width:100%;gap:10px}
+  .btn{width:100%;min-height:60px;font-size:16px}
+  .hero-note{font-size:11px;text-align:center}
+  .phone{width:min(365px,94vw)}
+  .phone-screen{min-height:635px}
+  .feature-grid,.app-feature-grid{grid-template-columns:1fr}
+  .feature{padding:21px}
+  .story-box{padding:24px}
+  .story-box .bigquote{font-size:31px}
+  .info-line{padding:18px}
+  .app-feature{padding:20px}
+  .offer{padding:37px 17px;border-radius:26px}
+  .offer p{font-size:16px}
+  .price{font-size:61px}
+  .offer .btn{min-width:0}
+  .offer-list span{font-size:11px}
+}
+
+@media(max-width:390px){
+  .container{width:calc(100% - 18px)}
+  h1{font-size:42px}
+  h2{font-size:33px}
+  .lead{font-size:17px}
+  .phone{padding:9px;border-radius:34px}
+  .phone-screen{border-radius:27px;padding-left:13px;padding-right:13px}
+  .price{font-size:54px}
+}
+</style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="container">
+    <div class="brand">ROTINA <span>NO CONTROLE</span></div>
+  </div>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <div class="kicker"><span class="kicker-dot"></span> Um jeito mais inteligente de organizar o seu dia</div>
+      <h1>Sua rotina <span class="shine">organizada.</span> Sua cabeça mais leve.</h1>
+      <p class="lead">
+        Conheça o método <b style="color:#eee6f5">Rotina no Controle</b> e use um app completo para transformar tarefas soltas em um dia mais claro, prático e fácil de acompanhar.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#oferta">QUERO TER MINHA ROTINA NO CONTROLE</a>
+        <a class="btn btn-secondary" href="#recursos">VER TUDO QUE TEM NO APP</a>
+      </div>
+
+      <div class="hero-note">
+        <span>✓</span><b>Método digital</b>
+        <span>•</span><b>7 dias de garantia</b>
+        <span>•</span><b>Acesso simples</b>
+      </div>
+    </div>
+
+    <div class="phone-wrap" aria-label="Prévia visual do aplicativo Rotina no Controle">
+      <div class="glow"></div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="app-head">
+            <div>
+              <div class="app-title">Rotina no Controle</div>
+              <div class="app-sub">Olá, sua rotina está no controle.</div>
+            </div>
+            <div class="app-pill">✦</div>
+          </div>
+
+          <div class="app-highlight">
+            <span style="font-size:9px;color:#e8d5ff;font-weight:900;text-transform:uppercase;letter-spacing:.13em">Hoje</span>
+            <div class="big" style="margin-top:8px">Seu dia organizado.</div>
+            <span style="display:block;margin-top:7px;color:#d6c4e4">Tarefas, horários e hábitos em um só lugar.</span>
+          </div>
+
+          <div class="app-card">
+            <strong>⏰ 08:00 — Treino</strong>
+            <span>Alarme configurado • prioridade alta</span>
+          </div>
+
+          <div class="app-card">
+            <strong>🛒 Lista de compras</strong>
+            <span>Leite • arroz • frutas • itens da semana</span>
+          </div>
+
+          <div class="app-row">
+            <div class="app-mini"><b>🥗 Nutrição</b><small>Refeições + calorias</small></div>
+            <div class="app-mini"><b>📷 Scanner</b><small>Foto → receita</small></div>
+            <div class="app-mini"><b>🏃 Fitness</b><small>Treino + hábitos</small></div>
+            <div class="app-mini"><b>💬 Assistente</b><small>Ajuda inteligente</small></div>
+          </div>
+
+          <div class="app-bottom">
+            <span class="active">Rotina</span><span>Nutrição</span><span>Scanner</span><span>Compras</span><span>Fitness</span><span>Assistente</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="recursos">
+  <div class="container">
+    <div class="section-head center">
+      <div class="kicker"><span class="kicker-dot"></span> Tudo conectado em um só lugar</div>
+      <h2>Não é só uma agenda.<br><span class="shine">É um centro de controle.</span></h2>
+      <p class="lead">
+        Em vez de espalhar sua rotina entre vários aplicativos, você reúne as partes mais importantes do seu dia em uma experiência única.
+      </p>
+    </div>
+
+    <div class="app-feature-grid">
+      <article class="app-feature">
+        <div class="app-feature-top"><div class="app-feature-icon">⏰</div><span class="badge">Rotina</span></div>
+        <h3>Alarmes e horários</h3>
+        <p>Organize o que precisa acontecer e configure horários para não depender apenas da memória.</p>
+      </article>
+
+      <article class="app-feature">
+        <div class="app-feature-top"><div class="app-feature-icon">📷</div><span class="badge">Nutrição</span></div>
+        <h3>Scanner de alimentos</h3>
+        <p>Use uma foto dos alimentos e tenha uma sugestão de receita com estimativa de calorias.</p>
+      </article>
+
+      <article class="app-feature">
+        <div class="app-feature-top"><div class="app-feature-icon">🥗</div><span class="badge">Alimentação</span></div>
+        <h3>Nutrição inteligente</h3>
+        <p>Planeje refeições e transforme uma ideia do que comer em uma opção mais organizada.</p>
+      </article>
+
+      <article class="app-feature">
+        <div class="app-feature-top"><div class="app-feature-icon">💬</div><span class="badge">Ajuda</span></div>
+        <h3>Assistente</h3>
+        <p>Tenha um espaço para perguntar sobre sua rotina, organização e alimentação.</p>
+      </article>
+
+      <article class="app-feature">
+        <div class="app-feature-top"><div class="app-feature-icon">🏃</div><span class="badge">Fitness</span></div>
+        <h3>Treino e hábitos</h3>
+        <p>Registre seus treinos e acompanhe hábitos de forma simples, prática e visual.</p>
+      </article>
+
+      <article class="app-feature">
+        <div class="app-feature-top"><div class="app-feature-icon">🛒</div><span class="badge">Compras</span></div>
+        <h3>Lista para não esquecer</h3>
+        <p>Adicione o que você precisa comprar e marque os itens enquanto estiver no mercado.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="story">
+      <div class="story-box">
+        <div class="kicker"><span class="kicker-dot"></span> O problema é simples</div>
+        <div class="bigquote" style="margin-top:20px">
+          “Eu gosto de ter minha rotina organizada.”
+        </div>
+        <p>
+          Porque quando você sabe o que precisa fazer, quando fazer e onde acompanhar tudo, o dia deixa de parecer uma sequência infinita de coisas para lembrar.
+        </p>
+      </div>
+
+      <div class="story-stack">
+        <div class="info-line">
+          <div class="info-number">01</div>
+          <div><b>Pare de deixar tudo na cabeça.</b><p>Coloque tarefas, horários e planos em um lugar visual e fácil de consultar.</p></div>
+        </div>
+        <div class="info-line">
+          <div class="info-number">02</div>
+          <div><b>Escolha o que realmente importa.</b><p>Defina prioridades e organize seu dia com mais intenção.</p></div>
+        </div>
+        <div class="info-line">
+          <div class="info-number">03</div>
+          <div><b>Tenha um sistema para repetir.</b><p>Uma rotina funciona melhor quando fica simples de acompanhar todos os dias.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <div class="kicker"><span class="kicker-dot"></span> O método</div>
+      <h2 style="margin-top:16px">Uma estrutura simples para deixar seus dias <span class="shine">mais claros.</span></h2>
+      <p class="lead" style="margin-left:0;text-align:left;max-width:760px">
+        O Rotina no Controle foi pensado para você começar pelo que precisa fazer e transformar isso em uma organização que dá vontade de seguir.
+      </p>
+    </div>
+
+    <div class="feature-grid">
+      <article class="feature">
+        <div class="feature-icon">◫</div>
+        <h3>Planejar seus dias</h3>
+        <p>Veja suas atividades com mais clareza e prepare o dia antes que ele comece a te atropelar.</p>
+        <span class="tag">Mais clareza</span>
+      </article>
+
+      <article class="feature">
+        <div class="feature-icon">▤</div>
+        <h3>Organizar tarefas</h3>
+        <p>Reúna as tarefas importantes e acompanhe o que já foi feito e o que ainda falta.</p>
+        <span class="tag">Mais controle</span>
+      </article>
+
+      <article class="feature">
+        <div class="feature-icon">◎</div>
+        <h3>Definir prioridades</h3>
+        <p>Separe o urgente do importante e reduza a sensação de estar tentando fazer tudo ao mesmo tempo.</p>
+        <span class="tag">Mais foco</span>
+      </article>
+
+      <article class="feature">
+        <div class="feature-icon">◷</div>
+        <h3>Estruturar a semana</h3>
+        <p>Tenha uma visão mais completa dos seus compromissos e crie uma sequência possível de cumprir.</p>
+        <span class="tag">Mais constância</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="oferta">
+  <div class="container">
+    <div class="offer">
+      <div class="kicker"><span class="kicker-dot"></span> Comece agora</div>
+      <h2>Seu próximo nível de organização começa <span class="shine">aqui.</span></h2>
+      <p>
+        Tenha o método <b style="color:#f0e8f7">Rotina no Controle</b> por um preço acessível e comece a construir uma rotina mais organizada, prática e leve.
+      </p>
+
+      <div class="price">R$ 47,90</div>
+      <div class="tiny">Método digital de organização da rotina</div>
+
+      <div class="offer-list">
+        <span>✓ Método prático</span>
+        <span>✓ App completo</span>
+        <span>✓ 7 dias de garantia</span>
+      </div>
+
+      <a class="btn btn-primary" href="#" id="checkoutBtn">QUERO O ROTINA NO CONTROLE</a>
+      <div class="guarantee">Você pode testar com tranquilidade. <b>Garantia de 7 dias.</b></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head center">
+      <div class="kicker"><span class="kicker-dot"></span> Perguntas rápidas</div>
+      <h2>Antes de começar, <span class="shine">tire suas dúvidas.</span></h2>
+    </div>
+
+    <div class="faq">
+      <div class="faq-item">
+        <button class="faq-q" type="button"><span>O que eu vou receber?</span><span>+</span></button>
+        <div class="faq-a"><p>Você recebe acesso ao método digital Rotina no Controle e à experiência do app apresentada nesta página, com recursos de rotina, alimentação, Scanner, Fitness, Compras, alarmes e Assistente.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button"><span>Preciso usar vários aplicativos?</span><span>+</span></button>
+        <div class="faq-a"><p>A proposta é justamente centralizar as principais partes da rotina em um único lugar, reduzindo a necessidade de ficar alternando entre ferramentas.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button"><span>Como funciona a garantia?</span><span>+</span></button>
+        <div class="faq-a"><p>Você conta com 7 dias de garantia. Para a oferta final, mantenha no checkout as condições completas aplicáveis à sua compra.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">Rotina no Controle · Organização, clareza e praticidade.</div>
+</footer>
+
+<script>
+document.querySelectorAll('.faq-q').forEach(button=>{
+  button.addEventListener('click',()=>{
+    const item=button.parentElement;
+    const wasOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(x=>x.classList.remove('open'));
+    if(!wasOpen)item.classList.add('open');
+  });
+});
+
+document.getElementById('checkoutBtn').addEventListener('click', (event)=>{
+  event.preventDefault();
+  const checkoutUrl = '#';
+  if(checkoutUrl !== '#') window.location.href = checkoutUrl;
+  else alert('Coloque aqui o link do seu checkout.');
+});
+</script>
+</body>
+</html>
